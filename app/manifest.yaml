@@ -29,20 +29,18 @@ project:
   packages:
     $PACKAGE_NAME:
       dependencies:
-          # binding cloudant package named openwhisk-cloudant
+          # binding cloud object storage package named cloud-object-storage
           cloud-object-storage:
               location: https://github.com/ibm-functions/package-cloud-object-storage/runtimes/nodejs
       triggers:
           # Trigger
-          # Creating trigger to fire events when data is inserted into database
+          # Creating trigger to fire events when data is inserted into COS
           $TRIGGER_NAME:
               feed: myCosPkg/changes
               inputs:
                   bucket: $BUCKET_NAME
                   endpoint: $ENDPOINT
       actions:
-          # Action named "get-classifiers"
-          # Creating action that is printing data which is written to the database
           parse_trigger:
             function: serverless/parse_trigger.js
             runtime: nodejs:10
@@ -61,8 +59,6 @@ project:
               apikey: $API_KEY
               version: $VERSION
       sequences:
-          # Sequence named "process-change-cloudant-sequence"
-          # Creating sequence to connect the cloudant "read" action with the "get-classifiers" action
           imagesequence:
             actions: parse_trigger, cloud-object-storage/client-get-signed-url, call_processing_functions
           grayandwrite:
@@ -71,7 +67,7 @@ project:
             actions: image_processing_vr, cloud-object-storage/object-write
       rules:
           # Rule
-          # Creating rule that maps database change trigger to sequence
+          # Creating rule that maps COS change trigger to sequence
           $RULE_NAME:
               trigger: $TRIGGER_NAME
               action: imagesequence

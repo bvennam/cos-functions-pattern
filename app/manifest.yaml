@@ -20,6 +20,7 @@
 #   RULE_NAME
 #   TRIGGER_NAME
 #   BUCKET_NAME
+#   ENDPOINT (cos endpoint for your buckets)
 #   API_KEY (watson visual recognition)
 #   VERSION (watson visual recognition version)
 

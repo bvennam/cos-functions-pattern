@@ -38,7 +38,7 @@ project:
               feed: myCosPkg/changes
               inputs:
                   bucket: $BUCKET_NAME
-                  endpoint: endpoint s3.us-south.cloud-object-storage.appdomain.cloud
+                  endpoint: $ENDPOINT
       actions:
           # Action named "get-classifiers"
           # Creating action that is printing data which is written to the database

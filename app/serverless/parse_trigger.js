@@ -8,5 +8,8 @@
   *
   */
 function main(params) {
-  return { bucket: params.bucket, key: params.file.Key, operation: 'getObject' };
+  if (params.status === 'added') {
+    return { bucket: params.bucket, key: params.file.Key, operation: 'getObject' };
+  }
+  return { error: 'ignoring deleted doc' };
 }

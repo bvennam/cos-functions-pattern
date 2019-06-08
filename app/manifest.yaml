@@ -49,6 +49,8 @@ project:
           call_processing_functions:
             function: serverless/call_processing_functions.js
             runtime: nodejs:10
+            inputs:
+              packageName: $PACKAGE_NAME
           image_processing_gray:
             function: serverless/image_processing_gray.js
             runtime: nodejs:10
@@ -56,7 +58,7 @@ project:
             function: serverless/image_processing_vr.js
             runtime: nodejs:10
             inputs:
-              apiKey: $API_KEY
+              apikey: $API_KEY
               version: $VERSION
       sequences:
           # Sequence named "process-change-cloudant-sequence"

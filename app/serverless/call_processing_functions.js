@@ -12,8 +12,9 @@ const openwhisk = require('openwhisk');
 
 async function main(params) {
   const namespace = process.env.__OW_NAMESPACE;
-  const imageProcessingGray = `/${namespace}/grayandwrite`;
-  const imageProcessingVR = `/${namespace}/vrandwrite`;
+  const { packageName } = params;
+  const imageProcessingGray = `/${namespace}/${packageName}/grayandwrite`;
+  const imageProcessingVR = `/${namespace}/${packageName}/vrandwrite`;
   const ignoreCerts = false;
   const ow = openwhisk({ ignoreCerts });
   await Promise.all([

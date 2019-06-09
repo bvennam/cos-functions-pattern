@@ -6,7 +6,7 @@ function tryTextUrl(theUrl) {
       setTimeout(() => { tryTextUrl(theUrl); }, 10000);
     },
     success: (result) => {
-      const txtParagraph = document.getElementById('vr-text')
+      const txtParagraph = document.getElementById('vr-text');
       txtParagraph.innerHTML = result;
     },
   });
@@ -18,7 +18,7 @@ function getVrText() {
   let { name } = file;
   const n = name.lastIndexOf('.');
   name = name.substring(0, n != -1 ? n : name.length);
-  name += '_vr.txt'
+  name += '_vr.txt';
   const settings = {
     url: '/getSignedUrl',
     method: 'POST',
@@ -26,10 +26,10 @@ function getVrText() {
       'content-type': 'application/json',
     },
     processData: false,
-    data: JSON.stringify({ filename: name })
+    data: JSON.stringify({ filename: name }),
   };
   $.ajax(settings).done((response) => {
-    setTimeout(() => { tryTextUrl(response.url)}, 45000)
+    setTimeout(() => { tryTextUrl(response.url); }, 45000);
   });
 }
 
@@ -69,18 +69,17 @@ function getGrayUrl() {
   });
 }
 
-
-  let settings = {
-      'async': false,
-      'crossDomain': true,
-      'method': 'GET',
-  }
 function uploadImage() {
-  settings.url = '/write';
-  const form = document.getElementById('myform')
-  var data = new FormData(form);
+  // let settings = {
+  //   async: false,
+  //   crossDomain: true,
+  //   method: 'GET',
+  //   url : '/write',
+  // };
+  const form = document.getElementById('myform');
+  const data = new FormData(form);
 
-$.ajax({
+  $.ajax({
     type: 'POST',
     enctype: 'multipart/form-data',
     url: '/write',
@@ -90,7 +89,7 @@ $.ajax({
     cache: false,
     timeout: 60000,
     success: (response) => {
-      const image = document.getElementById('original-image')
+      const image = document.getElementById('original-image');
       image.src = response.url;
       getGrayUrl();
       getVrText();

@@ -42,18 +42,18 @@ project:
                   endpoint: $ENDPOINT
       actions:
           parse_trigger:
-            function: serverless/parse_trigger.js
+            function: parse_trigger.js
             runtime: nodejs:10
           call_processing_functions:
-            function: serverless/call_processing_functions.js
+            function: call_processing_functions.js
             runtime: nodejs:10
             inputs:
               packageName: $PACKAGE_NAME
           image_processing_gray:
-            function: serverless/image_processing_gray.js
+            function: image_processing_gray.js
             runtime: nodejs:10
           image_processing_vr:
-            function: serverless/image_processing_vr.js
+            function: image_processing_vr.js
             runtime: nodejs:10
             inputs:
               apikey: $API_KEY

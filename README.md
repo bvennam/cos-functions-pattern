@@ -13,16 +13,16 @@ This pattern will set up a sample application to teach you about using IBM Cloud
 ### Create Required Services on IBM Cloud
 To run this application, you'll need to set up IBM Object Storage and the IBM Visual Recognition Service on IBM Cloud
 1. Create a Cloud Object Storage Service Instance:
-  * From the catalog select [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage).
-  * Give your service a name, and click `Create`.
-  * In the left side menu, select `Buckets`, and then `Create bucket`.
-  * Give your bucket a unique name. 
-  * For Resiliency, select `Cross Region`, and for Location, select `us-geo`.
-  * Click `Create Bucket`.
-  * Create another bucket, with the same name suffixed by `-processed`. If your original bucket was `my-bucket`, then your new bucket will be `my-bucket-processed`.
-  * Again, ensure that you select `Cross Region` and `us-geo`.
-  * In the left side menu, click `Service Credentials`. Click `New Credential`.
-  * Check the checkbox for `Include HMAC Credential`. Click `Add`.
+    * From the catalog select [Object Storage](https://cloud.ibm.com/catalog/services/cloud-object-storage).
+    * Give your service a name, and click `Create`.
+    * In the left side menu, select `Buckets`, and then `Create bucket`.
+    * Give your bucket a unique name. 
+    * For Resiliency, select `Cross Region`, and for Location, select `us-geo`.
+    * Click `Create Bucket`.
+    * Create another bucket, with the same name suffixed by `-processed`. If your original bucket was `my-bucket`, then your new bucket will be `my-bucket-processed`.
+    * Again, ensure that you select `Cross Region` and `us-geo`.
+    * In the left side menu, click `Service Credentials`. Click `New Credential`.
+    * Check the checkbox for `Include HMAC Credential`. Click `Add`.
 
 1. Create a Visual Recognition Service Instance
   * From the catalog select [Visual Recognition](https://cloud.ibm.com/catalog/services/visual-recognition)

@@ -1,3 +1,5 @@
+// Attempt to check if the VR text url is available, if not retry in 10 seconds.
+// The signed url is generated before the item becomes available in the COS bucket.
 function tryTextUrl(theUrl) {
   $.ajax({
     type: 'GET',
@@ -12,27 +14,8 @@ function tryTextUrl(theUrl) {
   });
 }
 
-function getVrText() {
-  const fileInput = document.getElementById('theFile');
-  const file = fileInput.files[0];
-  let { name } = file;
-  const n = name.lastIndexOf('.');
-  name = name.substring(0, n != -1 ? n : name.length);
-  name += '_vr.txt';
-  const settings = {
-    url: '/getSignedUrl',
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    processData: false,
-    data: JSON.stringify({ filename: name }),
-  };
-  $.ajax(settings).done((response) => {
-    setTimeout(() => { tryTextUrl(response.url); }, 45000);
-  });
-}
-
+// Attempt to check if the processed image url is available, if not retry in 10 seconds.
+// The signed url is generated before the item becomes available in the COS bucket.
 function tryUrl(theUrl) {
   $.ajax({
     type: 'GET',
@@ -47,13 +30,16 @@ function tryUrl(theUrl) {
   });
 }
 
-function getGrayUrl() {
-  const fileInput = document.getElementById('theFile');
-  const file = fileInput.files[0];
+// get the signed url for a specific file.
+function getSignedUrl(suffix) {
+  // build the file name based on the original file + suffix provided
+  const file = document.getElementById('theFile').files[0];
   let { name } = file;
-  const n = name.lastIndexOf('.');
-  name = name.substring(0, n != -1 ? n : name.length);
-  name += '_grey.png';
+  const indexOfLastPeriod = name.lastIndexOf('.');
+  name = name.substring(0, indexOfLastPeriod != -1 ? indexOfLastPeriod : name.length);
+  name += suffix;
+
+  // get signedUrl for the filename we just built.
   const settings = {
     url: '/getSignedUrl',
     method: 'POST',
@@ -63,43 +49,36 @@ function getGrayUrl() {
     processData: false,
     data: JSON.stringify({ filename: name }),
   };
-
-  $.ajax(settings).done((response) => {
-    setTimeout(() => { tryUrl(response.url); }, 45000);
+  return new Promise((resolve) => {
+    $.ajax(settings).done((response) => {
+      resolve(response.url);
+    });
   });
 }
 
-function uploadImage() {
-  // let settings = {
-  //   async: false,
-  //   crossDomain: true,
-  //   method: 'GET',
-  //   url : '/write',
-  // };
+// this function will upload the image to COS and get signedurls for uploaded images
+async function uploadImageAndGetProcessedImages() {
   const form = document.getElementById('myform');
   const data = new FormData(form);
 
-  $.ajax({
-    type: 'POST',
-    enctype: 'multipart/form-data',
-    url: '/write',
-    data,
-    processData: false,
-    contentType: false,
-    cache: false,
-    timeout: 60000,
-    success: (response) => {
-      const image = document.getElementById('original-image');
-      image.src = response.url;
-      getGrayUrl();
-      getVrText();
-    },
-    error: (e) => {
-      // $('#result').text(e.responseText);
-      console.log('ERROR : ', e);
-    },
-    complete: () => {
-      console.log('COMPLETE');
-    },
-  });
+  try {
+    const response = await $.ajax({
+      type: 'POST',
+      enctype: 'multipart/form-data',
+      url: '/write',
+      data,
+      processData: false,
+      contentType: false,
+      cache: false,
+      timeout: 60000,
+    });
+    const image = document.getElementById('original-image');
+    image.src = response.url;
+    const grayUrl = await getSignedUrl('_grey.png');
+    const vrUrl = await getSignedUrl('_vr.txt');
+    setTimeout(() => { tryTextUrl(vrUrl); }, 45000);
+    setTimeout(() => { tryUrl(grayUrl); }, 45000);
+  } catch (error) {
+    console.log('ERROR : ', error);
+  }
 }

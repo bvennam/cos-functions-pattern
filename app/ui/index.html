@@ -24,15 +24,19 @@
       <form id="myform" enctype="multipart/form-data">
           <input id="theFile" type="file" name="body" required>
       </form>
-      <button class="btn btn-primary" onclick="uploadImage()"> Upload </button>
-      <button class="btn btn-primary" onclick="getGrayUrl()"> Test </button>
-
+      <button class="btn btn-primary" onclick="uploadImageAndGetProcessedImages()"> Upload </button>
       <br/><br/>
+      <h4> Original Image:</h4>
       <div class="row">
         <div class="col-md-4">
           <img src="https://via.placeholder.com/200x200" class="my-image" id="original-image" style="max-width: 200px; height: auto;"></img>
         </div>
+      </div>
+      <br/><br/>
+      <h4> Image Processing and Analysis:</h4>
+      <div class = "row">
         <div class="col-md-4">
+          <h5>Charcoaled Image:</h5>
           <img src="https://via.placeholder.com/200x200" class="my-image" id="grey-image" style="max-width: 200px; height: auto;"></img>
         </div>
         <div class="col-md-4">

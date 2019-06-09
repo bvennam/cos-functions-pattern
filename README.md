@@ -25,9 +25,9 @@ To run this application, you'll need to set up IBM Object Storage and the IBM Vi
     * Check the checkbox for `Include HMAC Credential`. Click `Add`.
 
 1. Create a Visual Recognition Service Instance
-  * From the catalog select [Visual Recognition](https://cloud.ibm.com/catalog/services/visual-recognition)
-  * Give your service a name, and click `Create`.
-  * In the left side menu, click `Service Credentials`. If there are no service credentials created, click `New Credential`. Once your Service Credentials are created, make note of your `apikey`.
+    * From the catalog select [Visual Recognition](https://cloud.ibm.com/catalog/services/visual-recognition)
+    * Give your service a name, and click `Create`.
+    * In the left side menu, click `Service Credentials`. If there are no service credentials created, click `New Credential`. Once your Service Credentials are created, make note of your `apikey`.
 
 ### Login and set up your IBM Cloud CLI with Functions plugin
 1. Login to the IBM Cloud CLI:

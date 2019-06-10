@@ -31,11 +31,10 @@ function tryUrl(theUrl) {
 }
 
 // get the signed url for a specific file.
-function getSignedUrl(suffix) {
-  // build the file name based on the original file + suffix provided
-  const file = document.getElementById('theFile').files[0];
-  let { name } = file;
-  const indexOfLastPeriod = name.lastIndexOf('.');
+function getSignedUrl(filename, suffix) {
+  // build the file name based on the filename + suffix provided
+  let name = filename;
+  const indexOfLastPeriod = filename.lastIndexOf('.');
   name = name.substring(0, indexOfLastPeriod != -1 ? indexOfLastPeriod : name.length);
   name += suffix;
 
@@ -58,8 +57,17 @@ function getSignedUrl(suffix) {
 
 // this function will upload the image to COS and get signedurls for uploaded images
 async function uploadImageAndGetProcessedImages() {
+  // set the filename as uploadedName_timestamp.extension
+  const timestamp = Date.now();
+  const file = document.getElementById('theFile').files[0];
+  const filename = file.name;
+  const indexOfLastPeriod = filename.lastIndexOf('.');
+  const newFileName = [filename.slice(0, indexOfLastPeriod), '_', timestamp, filename.slice(indexOfLastPeriod, filename.length)].join('')
+
+  // create the formdata with new filename
   const form = document.getElementById('myform');
   const data = new FormData(form);
+  data.set('body', file, newFileName);
 
   try {
     const response = await $.ajax({
@@ -74,8 +82,8 @@ async function uploadImageAndGetProcessedImages() {
     });
     const image = document.getElementById('original-image');
     image.src = response.url;
-    const grayUrl = await getSignedUrl('_grey.png');
-    const vrUrl = await getSignedUrl('_vr.txt');
+    const grayUrl = await getSignedUrl(newFileName, '_grey.png');
+    const vrUrl = await getSignedUrl(newFileName, '_vr.txt');
     setTimeout(() => { tryTextUrl(vrUrl); }, 30000);
     setTimeout(() => { tryUrl(grayUrl); }, 30000);
   } catch (error) {

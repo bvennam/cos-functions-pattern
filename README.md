@@ -102,9 +102,21 @@ To deploy the functions required in this application, we'll use the `ibm fn depl
 1. Congratulations! If you went directly to your cloud object storage bucket and added a file, you should see your trigger fire and some processed actions showing up in your `mybucket-processed` bucket. Let's deploy a simple application for uploading the images and showing these results.
 
 ### Deploy the Web Application
-1. To deploy local app: 
-1. update config.js
-1. create credentials.json based on credentials_template.json
+Finally, let's deploy the web application that enables our users to upload images and see the resulting images. The application is a node.js with express app, and we can deploy it to IBM Cloud using the manifest.yaml file provided in the `/app` folder.
+1. Change directories to the `app` folder:
+    ```
+    cd ../app
+    ```
+  
+1. Update the `config.json` file with the required configuration values: your bucket name, your processed bucket name, and your endpoint url. You should've already found these values earlier.
+
+1. Create a file named `credentials.json` based on the `credentials_template.json` file. You can easily get the credentails by going to the cloud object storage service page, and clicking `Service Credentials`. You can copy this entire block and paste it as a child to `"OBJECTSTORAGE_CREDENTIALS":`.
+
+1. Deploy the application:
+    ```
+    ibmcloud cf push
+    ```
+  
 1. run CORS update function on the bucket with something like this:
 
 ```

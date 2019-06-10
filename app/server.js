@@ -5,7 +5,7 @@ const cosInstance = require('./objectStorage');
 const config = require('./config.js');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const bucketName = config.COSBucketName;
 const processedBucketName = config.COSProcessedBucketName;

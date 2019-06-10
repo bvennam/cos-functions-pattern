@@ -84,8 +84,8 @@ async function uploadImageAndGetProcessedImages() {
     image.src = response.url;
     const grayUrl = await getSignedUrl(newFileName, '_grey.png');
     const vrUrl = await getSignedUrl(newFileName, '_vr.txt');
-    setTimeout(() => { tryTextUrl(vrUrl); }, 30000);
-    setTimeout(() => { tryUrl(grayUrl); }, 30000);
+    setTimeout(() => { tryTextUrl(vrUrl); }, 15000);
+    setTimeout(() => { tryUrl(grayUrl); }, 15000);
   } catch (error) {
     console.log('ERROR : ', error);
   }

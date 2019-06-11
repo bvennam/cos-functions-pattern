@@ -7,9 +7,9 @@
   * @return The output of this action, which must be a JSON object.
   *
   */
-function main(params) {
-  if (params.status === 'added') {
-    return { bucket: params.bucket, key: params.file.Key, operation: 'getObject' };
-  }
-  return { error: 'ignoring deleted doc' };
+ function main(params) {
+   if (params.status === 'added' || params.status === 'modified') {
+     return { bucket: params.bucket, key: params.file.Key, operation: 'getObject' };
+    }
+    return { error: 'ignoring docs that are not deleted or modified' };
 }

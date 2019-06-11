@@ -53,13 +53,23 @@ IBM Cloud Functions has recently created an experimental package that introduces
     ibmcloud fn package bind /whisk.system/cos-experimental myCosPkg
     ```
 
+1. The service bind command requires your CloudFoundry API endpoint to be set. Let's set that now:
+    ```
+    ibmcloud target --cf
+    ```
+
 1. Bind your Cloud Object Storage credentials to your package binding:
     ```
     ibmcloud fn service bind cloud-object-storage myCosPkg
     ```
 
 ### Create Required Environment Variables and Deploy Cloud Functions
-To deploy the functions required in this application, we'll use the `ibm fn deploy` command. This command wil look for a `manifest.yaml` file defining a collection of packages, actions, triggers, and rules to be deployed. 
+To deploy the functions required in this application, we'll use the `ibm fn deploy` command. This command will look for a `manifest.yaml` file defining a collection of packages, actions, triggers, and rules to be deployed. 
+1. Let's clone the application.
+    ```
+    git clone git@github.com:beemarie/cos-functions-pattern.git
+    ```
+
 1. Take a look at the `serverless/manifest.yaml file`. You should see manifest describing the various actions, triggers, packages, and sequences to be created. You will also notice that there are a number of environment variables you should set locally before running this manifest file.
 
 1. Choose a package name, trigger name, and rule name and then save the environment variables.
@@ -91,12 +101,10 @@ To deploy the functions required in this application, we'll use the `ibm fn depl
     ibmcloud fn deploy
     ```
 
-1. `ibmcloud fn deploy`
-
 ### Bind Service Credentials to the Created Cloud Object Storage Package
 1. The deploy command created a package for you called `cloud-object-storage`. This package contains some useful cloud functions for interacting with cloud object storage. Let's bind the service credentials to this package.
     ```
-    ibmcloud fn service bind cloud-object-storage cloud-object-storage)
+    ibmcloud fn service bind cloud-object-storage cloud-object-storage
     ```
 
 1. Congratulations! If you went directly to your cloud object storage bucket and added a file, you should see your trigger fire and some processed actions showing up in your `mybucket-processed` bucket. Let's deploy a simple application for uploading the images and showing these results.
@@ -112,17 +120,25 @@ Finally, let's deploy the web application that enables our users to upload image
 
 1. Create a file named `credentials.json` based on the `credentials_template.json` file. You can easily get the credentails by going to the cloud object storage service page, and clicking `Service Credentials`. You can copy this entire block and paste it as a child to `"OBJECTSTORAGE_CREDENTIALS":`.
 
+1. Open up the manifest.yaml file at `app/manifest.yaml`. You should see something like this:
+    ```
+    ---
+    applications:
+    - name: cos-image-writer
+      memory: 256M
+      instances: 1
+    ```
+
+    This manifest file describes the cloud foundry application we're about to deploy. Please rename the application to anything you would like. 
+
 1. Deploy the application:
     ```
     ibmcloud cf push
     ```
-  
-1. run CORS update function on the bucket with something like this:
 
-```
-    CORSRules: [{
-      AllowedHeaders: ['*'],
-      AllowedMethods: ['PUT', 'GET', 'DELETE'],
-      AllowedOrigins: ['*'],
-    }],
-```
+1. Finally, we'll need to update the CORS settings on our processed images bucket.  The `cloud-object-storage` package we installed earlier comes with a method to let us do that. Run the following command, but be sure to edit it first with your own `-processed` bucket name.
+    ```
+    ibmcloud fn action invoke cloud-object-storage/bucket-cors-put -b -p bucket myBucket-processed -p corsConfig "{\"CORSRules\":[{\"AllowedHeaders\":[\"*\"], \"AllowedMethods\":[\"POST\",\"GET\",\"DELETE\"], \"AllowedOrigins\":[\"*\"]}]}"
+    ```
+
+1. You should now be able to use the application you deployed! When the application was deployed, it should've output a URL where your application lives, something like `my-app-name.mybluemix.net`. You can now go there and start uploading images and seeing your results!
